@@ -1,12 +1,16 @@
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, MinLength, MaxLength } from 'class-validator';
+import { IsStrongPassword } from '../decorators/strong-password.decorator';
 
 export class RegisterDto {
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Name is required' })
+  @MinLength(2, { message: 'Name must be at least 2 characters long' })
+  @MaxLength(50, { message: 'Name must not exceed 50 characters' })
   name: string;
 
-  @IsEmail()
+  @IsEmail({}, { message: 'Please provide a valid email address' })
   email: string;
 
-  @MinLength(6)
+  @IsStrongPassword({ message: 'Password does not meet security requirements' })
+  @MinLength(8, { message: 'Password must be at least 8 characters long' })
   password: string;
 }
