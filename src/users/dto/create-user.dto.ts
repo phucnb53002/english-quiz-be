@@ -1,6 +1,4 @@
-import { IsEmail, IsNotEmpty, MinLength, MaxLength } from 'class-validator';
-import { IsStrongPassword } from '../../auth/decorators/strong-password.decorator';
-import { UserRole } from '../user.schema';
+import { IsEmail, IsNotEmpty, MinLength, MaxLength, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsNotEmpty({ message: 'Name is required' })
@@ -11,9 +9,11 @@ export class CreateUserDto {
   @IsEmail({}, { message: 'Please provide a valid email address' })
   email: string;
 
-  @IsStrongPassword({ message: 'Password does not meet security requirements' })
+  @IsNotEmpty({ message: 'Password is required' })
   @MinLength(8, { message: 'Password must be at least 8 characters long' })
   password: string;
 
-  role?: UserRole;
+  @IsOptional()
+  @IsString()
+  role?: string;
 }
