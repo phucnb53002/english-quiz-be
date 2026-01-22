@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcrypt';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -15,7 +15,8 @@ export class UsersService {
   ) {}
 
   async create(dto: CreateUserDto): Promise<UserDocument> {
-    const user = new this.userModel(dto);
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    const user = new this.userModel({ ...dto, password: hashedPassword });
     return await user.save();
   }
 
@@ -32,6 +33,9 @@ export class UsersService {
   }
 
   async update(id: string, dto: UpdateUserDto): Promise<UserDocument> {
+    if (dto.password) {
+      dto.password = await bcrypt.hash(dto.password, 10);
+    }
     const user = await this.userModel
       .findByIdAndUpdate(id, dto, { new: true })
       .select('-password')
