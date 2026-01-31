@@ -3,14 +3,18 @@ import {
   IsNotEmpty,
   IsArray,
   IsNumber,
-  IsEnum,
+  IsOptional,
+  IsIn,
   MinLength,
   MaxLength,
   ArrayMinSize,
-  IsIn,
 } from 'class-validator';
 
 export class CreateQuestionDto {
+  @IsOptional()
+  @IsString()
+  examId?: string;
+
   @IsString()
   @IsNotEmpty()
   @MinLength(10)
@@ -26,7 +30,27 @@ export class CreateQuestionDto {
   @IsNotEmpty()
   correctAnswer: number;
 
-  @IsEnum(['easy', 'medium', 'hard'])
+  @IsIn(['easy', 'medium', 'hard'])
+  level?: 'easy' | 'medium' | 'hard';
+}
+
+export class UpdateQuestionDto {
+  @IsOptional()
+  @IsString()
+  examId?: string;
+
+  @IsOptional()
+  @IsString()
+  content?: string;
+
+  @IsOptional()
+  @IsArray()
+  options?: string[];
+
+  @IsOptional()
+  @IsNumber()
+  correctAnswer?: number;
+
   @IsIn(['easy', 'medium', 'hard'])
   level?: 'easy' | 'medium' | 'hard';
 }

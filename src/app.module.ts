@@ -6,6 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { QuestionsModule } from './questions/questions.module';
+import { ResultsModule } from './results/results.module';
+import { ExamsModule } from './exams/exams.module';
 import { AuthModule } from './auth/auth.module';
 import { SecurityHeadersMiddleware } from './common/middleware/security-headers.middleware';
 
@@ -24,6 +26,8 @@ import { SecurityHeadersMiddleware } from './common/middleware/security-headers.
 
     UsersModule,
     QuestionsModule,
+    ResultsModule,
+    ExamsModule,
     UsersModule,
     AuthModule,
   ],

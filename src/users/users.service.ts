@@ -1,9 +1,9 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { User, UserDocument } from './user.schema';
+import { User, UserDocument, UserRole } from './user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -15,8 +15,21 @@ export class UsersService {
   ) {}
 
   async create(dto: CreateUserDto): Promise<UserDocument> {
+    const existingUser = await this.userModel.findOne({ email: dto.email.toLowerCase() });
+    if (existingUser) {
+      throw new ConflictException('Email already exists');
+    }
+
     const hashedPassword = await bcrypt.hash(dto.password, 10);
-    const user = new this.userModel({ ...dto, password: hashedPassword });
+    
+    const userData: any = {
+      name: dto.name,
+      email: dto.email.toLowerCase(),
+      password: hashedPassword,
+      role: dto.role === 'admin' ? UserRole.ADMIN : UserRole.USER,
+    };
+
+    const user = new this.userModel(userData);
     return await user.save();
   }
 

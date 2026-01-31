@@ -29,9 +29,23 @@ export class QuestionsController {
     return this.questionsService.create(createQuestionDto);
   }
 
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
   @Get()
   findAll() {
     return this.questionsService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('quiz')
+  findAllForQuiz() {
+    return this.questionsService.findAllForQuiz();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('submit')
+  submitQuiz(@Body() body: { answers: { questionId: string; answer: number }[] }) {
+    return this.questionsService.submitQuiz(body.answers);
   }
 
   @Get(':id')
