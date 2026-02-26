@@ -20,8 +20,22 @@ export class Result {
   @Prop({ required: true })
   percentage: number;
 
-  @Prop({ type: [{ questionId: String, correct: Boolean, yourAnswer: Number, correctAnswer: Number }] })
-  results: { questionId: string; correct: boolean; yourAnswer: number; correctAnswer: number }[];
+  @Prop({
+    type: [
+      {
+        questionId: String,
+        correct: Boolean,
+        yourAnswer: Number,
+        correctAnswer: Number,
+      },
+    ],
+  })
+  results: {
+    questionId: string;
+    correct: boolean;
+    yourAnswer: number;
+    correctAnswer: number;
+  }[];
 
   @Prop({ default: 0 })
   timeSpent: number;

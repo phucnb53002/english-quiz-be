@@ -32,6 +32,7 @@ export class JwtAuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<RequestWithUser>();
     const token = this.extractTokenFromHeader(request);
+    console.log('authToken', token);
 
     if (!token) {
       throw new UnauthorizedException('No token provided');
@@ -42,8 +43,9 @@ export class JwtAuthGuard implements CanActivate {
       const payload: JwtPayload = await this.jwtService.verifyAsync(token, {
         secret,
       });
+      console.log('payload', payload);
       request.user = {
-        userId: payload.sub,
+        userId: payload.userId,
         email: payload.email,
         role: payload.role,
       };

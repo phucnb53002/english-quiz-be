@@ -67,7 +67,10 @@ export class ExamsController {
   }
 
   @Post(':id/submit')
-  submitQuiz(@Param('id') id: string, @Body() body: { answers: { questionId: string; answer: number }[] }) {
+  submitQuiz(
+    @Param('id') id: string,
+    @Body() body: { answers: { questionId: string; answer: number }[] },
+  ) {
     return this.examsService.submitQuiz(id, body.answers);
   }
 }

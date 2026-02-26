@@ -22,4 +22,3 @@ export class Question {
 }
 
 export const QuestionSchema = SchemaFactory.createForClass(Question);
-

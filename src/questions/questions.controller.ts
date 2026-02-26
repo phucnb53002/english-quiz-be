@@ -44,7 +44,9 @@ export class QuestionsController {
 
   @UseGuards(JwtAuthGuard)
   @Post('submit')
-  submitQuiz(@Body() body: { answers: { questionId: string; answer: number }[] }) {
+  submitQuiz(
+    @Body() body: { answers: { questionId: string; answer: number }[] },
+  ) {
     return this.questionsService.submitQuiz(body.answers);
   }
 

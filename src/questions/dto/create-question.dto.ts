@@ -33,24 +33,3 @@ export class CreateQuestionDto {
   @IsIn(['easy', 'medium', 'hard'])
   level?: 'easy' | 'medium' | 'hard';
 }
-
-export class UpdateQuestionDto {
-  @IsOptional()
-  @IsString()
-  examId?: string;
-
-  @IsOptional()
-  @IsString()
-  content?: string;
-
-  @IsOptional()
-  @IsArray()
-  options?: string[];
-
-  @IsOptional()
-  @IsNumber()
-  correctAnswer?: number;
-
-  @IsIn(['easy', 'medium', 'hard'])
-  level?: 'easy' | 'medium' | 'hard';
-}

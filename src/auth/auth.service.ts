@@ -51,7 +51,7 @@ export class AuthService {
     }
 
     const payload = {
-      sub: user._id.toString(),
+      userId: user._id.toString(),
       email: user.email,
       role: user.role,
     };
@@ -61,7 +61,11 @@ export class AuthService {
     };
   }
 
-  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ) {
     const user = await this.usersService.findOne(userId);
 
     if (!user) {

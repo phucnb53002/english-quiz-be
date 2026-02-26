@@ -41,17 +41,34 @@ export class ResultsService {
     topResults: Result[];
   }> {
     const results = await this.resultModel.find().exec();
-    
-    const totalSubmissions = results.length;
-    const averageScore = totalSubmissions > 0 
-      ? Math.round(results.reduce((acc, r) => acc + r.percentage, 0) / totalSubmissions)
-      : 0;
-    const passRate = totalSubmissions > 0 
-      ? Math.round((results.filter(r => r.percentage >= 70).length / totalSubmissions) * 100)
-      : 0;
 
-    const recentResults = await this.resultModel.find().sort({ createdAt: -1 }).limit(5).exec();
-    const topResults = await this.resultModel.find().sort({ percentage: -1 }).limit(5).exec();
+    const totalSubmissions = results.length;
+    const averageScore =
+      totalSubmissions > 0
+        ? Math.round(
+            results.reduce((acc, r) => acc + r.percentage, 0) /
+              totalSubmissions,
+          )
+        : 0;
+    const passRate =
+      totalSubmissions > 0
+        ? Math.round(
+            (results.filter((r) => r.percentage >= 70).length /
+              totalSubmissions) *
+              100,
+          )
+        : 0;
+
+    const recentResults = await this.resultModel
+      .find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .exec();
+    const topResults = await this.resultModel
+      .find()
+      .sort({ percentage: -1 })
+      .limit(5)
+      .exec();
 
     return {
       totalSubmissions,
@@ -68,15 +85,21 @@ export class ResultsService {
     bestScore: number;
     recentResults: Result[];
   }> {
-    const results = await this.resultModel.find({ userId }).sort({ createdAt: -1 }).exec();
-    
+    const results = await this.resultModel
+      .find({ userId })
+      .sort({ createdAt: -1 })
+      .exec();
+
     const totalSubmissions = results.length;
-    const averageScore = totalSubmissions > 0 
-      ? Math.round(results.reduce((acc, r) => acc + r.percentage, 0) / totalSubmissions)
-      : 0;
-    const bestScore = totalSubmissions > 0 
-      ? Math.max(...results.map(r => r.percentage))
-      : 0;
+    const averageScore =
+      totalSubmissions > 0
+        ? Math.round(
+            results.reduce((acc, r) => acc + r.percentage, 0) /
+              totalSubmissions,
+          )
+        : 0;
+    const bestScore =
+      totalSubmissions > 0 ? Math.max(...results.map((r) => r.percentage)) : 0;
 
     return {
       totalSubmissions,

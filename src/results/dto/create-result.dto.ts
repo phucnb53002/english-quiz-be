@@ -17,7 +17,12 @@ export class CreateResultDto {
   percentage: number;
 
   @IsArray()
-  results: { questionId: string; correct: boolean; yourAnswer: number; correctAnswer: number }[];
+  results: {
+    questionId: string;
+    correct: boolean;
+    yourAnswer: number;
+    correctAnswer: number;
+  }[];
 
   @IsNumber()
   timeSpent: number;
