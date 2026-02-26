@@ -25,12 +25,10 @@ export class AuthService {
       throw new BadRequestException('Email already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
-
     const user = await this.usersService.create({
       name: dto.name,
       email: dto.email,
-      password: hashedPassword,
+      password: dto.password,
       role: UserRole.USER,
     });
 
@@ -53,7 +51,7 @@ export class AuthService {
     }
 
     const payload = {
-      sub: user._id.toString(),
+      userId: user._id.toString(),
       email: user.email,
       role: user.role,
     };
@@ -61,5 +59,27 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ) {
+    const user = await this.usersService.findOne(userId);
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('Current password is incorrect');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await this.usersService.update(userId, { password: hashedPassword });
+
+    return { message: 'Password changed successfully' };
   }
 }

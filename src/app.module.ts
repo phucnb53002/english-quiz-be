@@ -1,12 +1,13 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { QuestionsModule } from './questions/questions.module';
+import { ResultsModule } from './results/results.module';
+import { ExamsModule } from './exams/exams.module';
 import { AuthModule } from './auth/auth.module';
+import { SecurityHeadersMiddleware } from './common/middleware/security-headers.middleware';
 
 @Module({
   imports: [
@@ -23,10 +24,13 @@ import { AuthModule } from './auth/auth.module';
 
     UsersModule,
     QuestionsModule,
-    UsersModule,
+    ResultsModule,
+    ExamsModule,
     AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(SecurityHeadersMiddleware).forRoutes('*');
+  }
+}
