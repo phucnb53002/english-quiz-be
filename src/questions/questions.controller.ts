@@ -30,7 +30,6 @@ export class QuestionsController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles(UserRole.ADMIN)
   @Get()
   findAll() {
     return this.questionsService.findAll();

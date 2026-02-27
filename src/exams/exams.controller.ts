@@ -36,7 +36,6 @@ export class ExamsController {
   }
 
   @UseGuards(RolesGuard)
-  @Roles(UserRole.ADMIN)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.examsService.findOneWithQuestions(id);

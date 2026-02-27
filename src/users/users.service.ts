@@ -76,16 +76,4 @@ export class UsersService {
   async findByEmail(email: string): Promise<UserDocument | null> {
     return this.userModel.findOne({ email }).exec();
   }
-
-  async updateRefreshToken(
-    userId: string,
-    refreshToken: string | null,
-  ): Promise<void> {
-    const hashed: string | null = refreshToken
-      ? await bcrypt.hash(refreshToken, 10)
-      : null;
-    await this.userModel.findByIdAndUpdate(userId, {
-      refreshToken: hashed,
-    });
-  }
 }
