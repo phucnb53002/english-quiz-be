@@ -29,19 +29,16 @@ export class QuestionsController {
     return this.questionsService.create(createQuestionDto);
   }
 
-  @UseGuards(RolesGuard)
   @Get()
   findAll() {
     return this.questionsService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('quiz')
   findAllForQuiz() {
     return this.questionsService.findAllForQuiz();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('submit')
   submitQuiz(
     @Body() body: { answers: { questionId: string; answer: number }[] },

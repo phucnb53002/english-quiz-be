@@ -32,25 +32,33 @@ export class ExamsService {
     return exam;
   }
 
-  async findOneWithQuestions(id: string): Promise<{ exam: Exam; questions: Question[] }> {
+  async findOneWithQuestions(
+    id: string,
+  ): Promise<{ exam: Exam; questions: Question[] }> {
     const exam = await this.examModel.findById(id).exec();
     if (!exam) {
       throw new NotFoundException('Exam not found');
     }
-    const questions = await this.questionModel.find({ examId: new Types.ObjectId(id) }).exec();
+    const questions = await this.questionModel
+      .find({ examId: new Types.ObjectId(id) })
+      .exec();
     return { exam, questions };
   }
 
-  async findAllWithQuestionCount(): Promise<(Exam & { questionCount: number })[]> {
+  async findAllWithQuestionCount(): Promise<
+    (Exam & { questionCount: number })[]
+  > {
     const exams = await this.examModel.find().sort({ createdAt: -1 }).exec();
-    
+
     const examsWithCount = await Promise.all(
       exams.map(async (exam) => {
-        const count = await this.questionModel.countDocuments({ examId: exam._id }).exec();
+        const count = await this.questionModel
+          .countDocuments({ examId: exam._id })
+          .exec();
         return { ...exam.toObject(), questionCount: count };
-      })
+      }),
     );
-    
+
     return examsWithCount;
   }
 
@@ -65,7 +73,9 @@ export class ExamsService {
   }
 
   async remove(id: string): Promise<{ message: string }> {
-    await this.questionModel.deleteMany({ examId: new Types.ObjectId(id) }).exec();
+    await this.questionModel
+      .deleteMany({ examId: new Types.ObjectId(id) })
+      .exec();
     const result = await this.examModel.findByIdAndDelete(id).exec();
     if (!result) {
       throw new NotFoundException('Exam not found');
@@ -82,23 +92,36 @@ export class ExamsService {
   }
 
   async getAllActiveExams(): Promise<(Exam & { questionCount: number })[]> {
-    const exams = await this.examModel.find({ isActive: true }).sort({ createdAt: -1 }).exec();
-    
+    const exams = await this.examModel
+      .find({ isActive: true })
+      .sort({ createdAt: -1 })
+      .exec();
+
     const examsWithCount = await Promise.all(
       exams.map(async (exam) => {
-        const count = await this.questionModel.countDocuments({ examId: exam._id }).exec();
+        const count = await this.questionModel
+          .countDocuments({ examId: exam._id })
+          .exec();
         return { ...exam.toObject(), questionCount: count };
-      })
+      }),
     );
-    
+
     return examsWithCount;
   }
 
-  async submitQuiz(examId: string, answers: { questionId: string; answer: number }[]): Promise<{
+  async submitQuiz(
+    examId: string,
+    answers: { questionId: string; answer: number }[],
+  ): Promise<{
     score: number;
     total: number;
     percentage: number;
-    results: { questionId: string; correct: boolean; yourAnswer: number; correctAnswer: number }[];
+    results: {
+      questionId: string;
+      correct: boolean;
+      yourAnswer: number;
+      correctAnswer: number;
+    }[];
   }> {
     let correct = 0;
     const results: {
@@ -109,7 +132,9 @@ export class ExamsService {
     }[] = [];
 
     for (const answer of answers) {
-      const question = await this.questionModel.findById(answer.questionId).exec();
+      const question = await this.questionModel
+        .findById(answer.questionId)
+        .exec();
       if (question) {
         const isCorrect = question.correctAnswer === answer.answer;
         if (isCorrect) {
