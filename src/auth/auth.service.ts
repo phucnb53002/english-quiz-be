@@ -66,7 +66,7 @@ export class AuthService {
     currentPassword: string,
     newPassword: string,
   ) {
-    const user = await this.usersService.findOne(userId);
+    const user = await this.usersService.findByIdWithPassword(userId);
 
     if (!user) {
       throw new UnauthorizedException('User not found');
@@ -77,8 +77,7 @@ export class AuthService {
       throw new UnauthorizedException('Current password is incorrect');
     }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await this.usersService.update(userId, { password: hashedPassword });
+    await this.usersService.update(userId, { password: newPassword });
 
     return { message: 'Password changed successfully' };
   }
